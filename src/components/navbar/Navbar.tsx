@@ -7,7 +7,10 @@ const Navbar = () => {
   const { pathname } = useLocation();
 
   return (
-    <div className="flex inset-x-0 bottom-0 bg-dark-blue h-12 border-t border-[#243043] border-solid">
+    <div
+      id="navbar"
+      className="absolute flex inset-x-0 bottom-0 bg-dark-blue h-12 border-t border-[#243043] border-solid"
+    >
       <div className="w-full flex">
         {navigation.map((item: NavItemType) => (
           <NavLink

@@ -4,7 +4,10 @@ import { TbAntennaBars4 } from "react-icons/tb";
 
 const Header = () => {
   return (
-    <div className="px-5 flex text-sm inset-x-0 top-0 bg-dark-blue h-14 justify-around items-center ">
+    <div
+      id="header"
+      className="px-5 relative flex text-sm inset-x-0 top-0 bg-dark-blue h-14 justify-around items-center "
+    >
       <div className="clock grow basis-0 font-bold flex justify-around">
         <span>9:41</span>
         <span></span>
