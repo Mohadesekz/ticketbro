@@ -1,4 +1,4 @@
-import { WeekDateType } from "./interface";
+import { WeekDateType, UserType } from "./interface";
 export const PIXELS_PER_MINUTES = 2.5;
 export const QUARTER = 15;
 export const hoursInADay = 24;
@@ -56,3 +56,36 @@ export function getYear() {
   thisYear += new Date(saoPauloToday).getFullYear();
   return thisYear;
 }
+
+export const users: UserType[] = [
+  {
+    name: "Tania",
+    id: 1,
+    avatar: "https://i.pravatar.cc/50?img=5",
+    selected: true,
+  },
+  {
+    name: "Johan",
+    id: 2,
+    avatar: "https://i.pravatar.cc/50?img=33",
+    selected: false,
+  },
+  {
+    name: "Mahaa",
+    id: 3,
+    avatar: "https://i.pravatar.cc/50?img=16",
+    selected: false,
+  },
+  {
+    name: "Reza",
+    id: 4,
+    avatar: "https://i.pravatar.cc/50?img=52",
+    selected: false,
+  },
+  {
+    name: "Alex",
+    id: 5,
+    avatar: "https://i.pravatar.cc/50?img=60",
+    selected: false,
+  },
+];
