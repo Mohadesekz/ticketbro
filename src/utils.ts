@@ -1,10 +1,10 @@
-import { WeekDateType, UserType } from "./interface";
+import { WeekDateType } from "./interface";
 export const PIXELS_PER_MINUTES = 2.5;
 export const QUARTER = 15;
-export const hoursInADay = 24;
-export const minutesInAnHour = 60;
-export const totalMinutes = hoursInADay * minutesInAnHour;
-
+export const HOURS_IN_A_DAY = 24;
+export const MINUTES_IN_AN_HOUR = 60;
+export const totalMinutes = HOURS_IN_A_DAY * MINUTES_IN_AN_HOUR;
+export const PADDING_FROM_TOP = 40;
 export const days: string[] = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
 let weekDates: WeekDateType[] = [];
 export function getCurrentWeekDates() {
@@ -57,35 +57,14 @@ export function getYear() {
   return thisYear;
 }
 
-export const users: UserType[] = [
-  {
-    name: "Tania",
-    id: 1,
-    avatar: "https://i.pravatar.cc/50?img=5",
-    selected: true,
-  },
-  {
-    name: "Johan",
-    id: 2,
-    avatar: "https://i.pravatar.cc/50?img=33",
-    selected: false,
-  },
-  {
-    name: "Mahaa",
-    id: 3,
-    avatar: "https://i.pravatar.cc/50?img=16",
-    selected: false,
-  },
-  {
-    name: "Reza",
-    id: 4,
-    avatar: "https://i.pravatar.cc/50?img=52",
-    selected: false,
-  },
-  {
-    name: "Alex",
-    id: 5,
-    avatar: "https://i.pravatar.cc/50?img=60",
-    selected: false,
-  },
-];
+export function returnPixelBasedOnTime(time: string) {
+  const timeParts = time.split(":");
+  const hour = parseInt(timeParts[0], 10);
+  const shiftedHour = (hour + 15) % 24;
+  const minutes = parseInt(timeParts[1], 10);
+  return {
+    pixels: PIXELS_PER_MINUTES * (shiftedHour * MINUTES_IN_AN_HOUR + minutes),
+    hour,
+    minutes,
+  };
+}

@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { UserType } from "src/interface";
-import { users } from "src/utils";
+import { users } from "src/mockData";
 
 type Store = {
   users: UserType[];
