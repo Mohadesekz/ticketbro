@@ -9,30 +9,35 @@ export const users: UserType[] = [
     id: 1,
     avatar: "https://i.pravatar.cc/50?img=5",
     selected: true,
+    counter: 0,
   },
   {
     name: "Johannes",
     id: 2,
     avatar: "https://i.pravatar.cc/50?img=33",
     selected: false,
+    counter: 0,
   },
   {
     name: "Mahaa",
     id: 3,
     avatar: "https://i.pravatar.cc/50?img=16",
     selected: false,
+    counter: 0,
   },
   {
     name: "Reza",
     id: 4,
     avatar: "https://i.pravatar.cc/50?img=52",
     selected: false,
+    counter: 0,
   },
   {
     name: "Alex",
     id: 5,
     avatar: "https://i.pravatar.cc/50?img=60",
     selected: false,
+    counter: 0,
   },
 ];
 
@@ -58,14 +63,14 @@ export const guests: guestType[] = [
     avatar: "https://i.pravatar.cc/50?img=4",
   },
   {
-    name: "Lionel Renner",
+    name: "Adele",
     guestId: 5,
     avatar: "https://i.pravatar.cc/50?img=5",
   },
   {
     name: "Gary Oldman",
     guestId: 6,
-    // avatar: "https://i.pravatar.cc/50?img=6",
+    avatar: "https://i.pravatar.cc/50?img=6",
   },
   {
     name: "Johnny Depp",

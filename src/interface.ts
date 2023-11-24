@@ -16,6 +16,7 @@ export type UserType = {
   id: number;
   avatar: string;
   selected: boolean;
+  counter: number;
 };
 export type guestType = {
   name: string;

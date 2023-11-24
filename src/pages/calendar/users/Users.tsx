@@ -26,11 +26,14 @@ const Users = () => {
               changeUser(user.id);
             }}
           >
-            <motion.img
-              layout
-              src={user.avatar}
-              className="rounded-full h-7 mr-2"
-            />
+            <motion.div className="relative" layout>
+              <motion.img src={user.avatar} className="rounded-full h-7 mr-2" />
+              {user.counter > 0 && (
+                <div className="absolute rounded-full h-4 w-4 flex justify-center items-center bg-dark-blue -bottom-1 right-1 text-[8px] text-gray-200">
+                  {user.counter}
+                </div>
+              )}
+            </motion.div>
             <motion.div
               variants={{
                 hidden: { opacity: 0 },

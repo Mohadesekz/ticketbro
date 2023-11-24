@@ -1,12 +1,17 @@
 import { motion } from "framer-motion";
-import { WeekDateType } from "src/interface";
+import { EventType, WeekDateType } from "src/interface";
 import { getDayAndMonth, getYear, days } from "src/utils";
 import { useDateStore } from "src/stores/dateStore";
-
+import { useUserStore } from "src/stores/userStore";
+import { useEventStore } from "src/stores/eventStore";
 const WeekDays = () => {
   const currentWeek = useDateStore((state) => state.currentWeek);
   const changeDate = useDateStore((state) => state.changeDate);
-
+  const updateUserBadge = useUserStore((state) => state.updateUserBadge);
+  const events = useEventStore((state) => state.events);
+  const filterEventsOfASelectedDay = useEventStore(
+    (state) => state.filterEventsOfASelectedDay
+  );
   return (
     <div
       id="weekdays"
@@ -33,14 +38,24 @@ const WeekDays = () => {
             whileTap={{ scale: 0.95 }}
             key={weekDate.date}
             className={`
-            h-8 w-8 p-3 rounded-lg  flex items-center justify-center cursor-pointer hover:bg-[#293345]
+            relative h-8 w-8 p-3 rounded-lg  flex items-center justify-center cursor-pointer hover:bg-[#293345]
             ${weekDate.selected && !weekDate.isCurrent ? "!bg-[#334155]" : ""}
             ${weekDate.isCurrent ? "text-black !bg-white !hover:bg-white " : ""}
             `}
             onClick={() => {
               changeDate(weekDate.date);
+              filterEventsOfASelectedDay();
+              updateUserBadge();
             }}
           >
+            {events.findIndex(
+              (event: EventType) =>
+                event.date === weekDate.date &&
+                event.eventDetail.type === "Meeting"
+            ) > -1 && (
+              <span className="bottom-7 left-7 absolute w-1 h-1 bg-[#3c46e0] rounded-full"></span>
+            )}
+
             <span>{weekDate.date}</span>
           </motion.div>
         ))}
