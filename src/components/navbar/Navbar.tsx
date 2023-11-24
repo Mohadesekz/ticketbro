@@ -1,5 +1,12 @@
 import { NavLink, useLocation } from "react-router-dom";
-import { navigation } from "./Navigation";
+import {
+  CalendarIcon,
+  HouseIcon,
+  MessengerIcon,
+  SettingIcon,
+  ShopIcon,
+  navigation,
+} from "./Navigation";
 import { NavItemType } from "src/interface";
 import { motion } from "framer-motion";
 
@@ -45,8 +52,20 @@ type NavbarIconType = {
   isActive: boolean;
 };
 
-const NavbarIcon = ({ icon }: NavbarIconType) => (
-  <div className="navbar-icon text-base">{icon}</div>
+const NavbarIcon = ({ icon, isActive }: NavbarIconType) => (
+  <div className="navbar-icon text-base">
+    {icon === "house" ? (
+      <HouseIcon isActive={isActive} />
+    ) : icon === "calendar" ? (
+      <CalendarIcon isActive={isActive} />
+    ) : icon === "shop" ? (
+      <ShopIcon isActive={isActive} />
+    ) : icon === "messenger" ? (
+      <MessengerIcon isActive={isActive} />
+    ) : icon === "setting" ? (
+      <SettingIcon isActive={isActive} />
+    ) : null}
+  </div>
 );
 
 export default Navbar;

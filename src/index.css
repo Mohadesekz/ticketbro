@@ -6,8 +6,10 @@
   --COLOR_GRAY: #333333;
   font-family: "Roboto";
 }
+
 body {
   margin: 0;
+  font-family: "Roboto";
 }
 
 * {
@@ -21,4 +23,7 @@ body {
 * {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
+}
+.navbar-icon .isActive > path {
+  fill: white;
 }
