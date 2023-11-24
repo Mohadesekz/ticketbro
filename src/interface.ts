@@ -17,3 +17,21 @@ export type UserType = {
   avatar: string;
   selected: boolean;
 };
+export type guestType = {
+  name: string;
+  guestId: number;
+  avatar?: string;
+};
+
+export type eventDetailType = {
+  type: string;
+  guestId?: number;
+};
+
+export type EventType = {
+  eventDetail: eventDetailType;
+  date: number;
+  userId: number;
+  startTime: string;
+  endTime: string;
+};

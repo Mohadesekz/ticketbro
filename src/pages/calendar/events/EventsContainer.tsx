@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import TimeLineCanvas from "./canvas/TimeLineCanvas";
+import ScheduledEvents from "./scheduledEvents/ScheduledEvents";
 
 export const PIXELS_PER_MINUTES = 2.5;
 export const MINUTES_IN_HOUR = 60;
@@ -56,6 +57,7 @@ const EventsContainer = () => {
         className="relative overflow-y-scroll overflow-x-hidden"
       >
         <TimeLineCanvas startTime="09:00" totalHeight={TOTAL_HEIGHT} />
+        <ScheduledEvents />
       </div>
     </div>
   );

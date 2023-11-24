@@ -68,3 +68,22 @@ export function returnPixelBasedOnTime(time: string) {
     minutes,
   };
 }
+
+export function returnHeightBasedOnTimeDifference(
+  startTime: string,
+  endTime: string
+) {
+  const { hour: startHour, minutes: startMinute } =
+    returnPixelBasedOnTime(startTime);
+  const { hour: endHour, minutes: endMinute } = returnPixelBasedOnTime(endTime);
+
+  let startMinutes = startHour * MINUTES_IN_AN_HOUR + startMinute;
+  let endMinutes = endHour * MINUTES_IN_AN_HOUR + endMinute;
+
+  if (endMinutes < startMinutes) {
+    endMinutes += HOURS_IN_A_DAY * MINUTES_IN_AN_HOUR; // Add 24 hours worth of minutes
+  }
+  const timeDifference = endMinutes - startMinutes;
+  const heightBasedOnTimeDifference = timeDifference * PIXELS_PER_MINUTES;
+  return heightBasedOnTimeDifference;
+}
