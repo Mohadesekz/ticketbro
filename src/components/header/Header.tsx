@@ -1,15 +1,16 @@
 import { IoIosWifi } from "react-icons/io";
 import { FaBatteryEmpty } from "react-icons/fa6";
 import { TbAntennaBars4 } from "react-icons/tb";
+import { getCurrentTime } from "src/utils";
 
 const Header = () => {
   return (
     <div
       id="header"
-      className="px-5 relative flex text-sm inset-x-0 top-0 bg-dark-blue h-14 justify-around items-center "
+      className="px-5 relative flex text-sm inset-x-0 top-0 bg-dark-blue h-12 justify-around items-center "
     >
       <div className="clock grow basis-0 font-bold flex justify-around">
-        <span>9:41</span>
+        <span>{getCurrentTime()}</span>
         <span></span>
       </div>
       <div className="w-24 bg-black rounded-full h-7 grow basis-0"></div>

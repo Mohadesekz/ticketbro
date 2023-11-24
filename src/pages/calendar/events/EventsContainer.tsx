@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import TimeLineCanvas from "./canvas/TimeLineCanvas";
 import ScheduledEvents from "./scheduledEvents/ScheduledEvents";
+import { useDateStore } from "src/stores/dateStore";
+import CurrentTimeArrow from "./currentTimeArrow/CurrentTimeArrow";
 
 export const PIXELS_PER_MINUTES = 2.5;
 export const MINUTES_IN_HOUR = 60;
@@ -29,6 +31,7 @@ const returnCanvasHight = () => {
 
 const EventsContainer = () => {
   const [canvasHeight, setCanvasHeight] = useState(0);
+  const currentDay = useDateStore((state) => state.selectedDate);
 
   useEffect(() => {
     let canvasHeight = returnCanvasHight();
@@ -58,6 +61,7 @@ const EventsContainer = () => {
       >
         <TimeLineCanvas startTime="09:00" totalHeight={TOTAL_HEIGHT} />
         <ScheduledEvents />
+        {currentDay?.isCurrent && <CurrentTimeArrow />}
       </div>
     </div>
   );

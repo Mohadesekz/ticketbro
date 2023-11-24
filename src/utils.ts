@@ -13,7 +13,6 @@ export function getCurrentWeekDates() {
   // Set timezone to São Paulo
   const options = { timeZone: "America/Sao_Paulo" };
   const saoPauloToday = today.toLocaleString("en-US", options);
-
   const currentDay = (new Date(saoPauloToday).getDay() + 6) % 7;
   const weekStart = new Date(saoPauloToday);
   weekStart.setDate(weekStart.getDate() - currentDay); // Get the starting day (Monday) of the current week
@@ -55,6 +54,26 @@ export function getYear() {
   const saoPauloToday = today.toLocaleString("en-US", options);
   thisYear += new Date(saoPauloToday).getFullYear();
   return thisYear;
+}
+
+export function getCurrentTime() {
+  const today = new Date();
+  const currentHour = today.getHours();
+  const currentMinute = String(today.getMinutes()).padStart(2, "0");
+  return currentHour + ":" + currentMinute;
+}
+
+export function getCurrentTimeInSaoPaulo() {
+  const today = new Date();
+  // Set timezone to São Paulo
+  const options = { timeZone: "America/Sao_Paulo" };
+  const saoPauloToday = today.toLocaleString("en-US", options);
+  const currentHour = new Date(saoPauloToday).getHours();
+  const currentMinute = String(new Date(saoPauloToday).getMinutes()).padStart(
+    2,
+    "0"
+  );
+  return currentHour + ":" + currentMinute;
 }
 
 export function returnPixelBasedOnTime(time: string) {
