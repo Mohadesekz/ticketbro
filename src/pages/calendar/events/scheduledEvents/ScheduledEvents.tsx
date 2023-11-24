@@ -10,6 +10,7 @@ import {
 } from "src/utils";
 import { guests } from "src/mockData";
 import defaultAvatar from "src/assets/images/defaultAvatar.png";
+import { motion } from "framer-motion";
 const scheduledEvents = ({}) => {
   const currUser = useUserStore((state) => state.selectedUser);
   const currentDay = useDateStore((state) => state.selectedDate);
@@ -26,8 +27,18 @@ const scheduledEvents = ({}) => {
     <div className="">
       {selectedEvents &&
         selectedEvents.map((event: EventType, index: number) => (
-          <div
+          <motion.div
             key={index}
+            variants={{
+              hidden: { opacity: 0 },
+              visible: {
+                opacity: event.eventDetail.type === "Meeting" ? 1 : 0.7,
+              },
+            }}
+            transition={{ duration: 0.25 }}
+            initial="hidden"
+            animate="visible"
+            exit="hidden"
             className={`absolute flex right-5 bg-[#20283B] p-2  w-[67%] rounded-lg ${
               event.eventDetail.type === "Meeting"
                 ? "border-[#243043] border-2 opacity-100"
@@ -75,7 +86,7 @@ const scheduledEvents = ({}) => {
                 <span>{`${event.startTime}  -  ${event.endTime}`}</span>
               </div>
             )}
-          </div>
+          </motion.div>
         ))}
     </div>
   );
