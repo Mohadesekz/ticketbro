@@ -9,7 +9,7 @@ type Store = {
 };
 
 export const useDateStore = create<Store>()((set) => ({
-  currentWeek: getCurrentWeekDates(),
+  currentWeek: getCurrentWeekDates().weekDates,
   selectedDate: getToday(),
   changeDate: (date) => {
     set((state) => ({

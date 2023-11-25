@@ -3,7 +3,7 @@ import {
   PADDING_FROM_TOP,
   PIXELS_PER_MINUTES,
   QUARTER,
-  returnPixelBasedOnTime,
+  returnSplitedTime,
   totalMinutes,
 } from "src/utils";
 interface TimeLineCanvasProps {
@@ -24,7 +24,7 @@ const TimeLineCanvas: React.FC<TimeLineCanvasProps> = ({
       if (ctx) {
         ctx.lineWidth = 0.5;
         const { hour: startHour, minutes: startMinute } =
-          returnPixelBasedOnTime(startTime);
+          returnSplitedTime(startTime);
         for (let i = 0; i <= totalMinutes; i += QUARTER) {
           const currentHour = startHour + Math.floor((startMinute + i) / 60);
           // const currentMinute = (startMinute + i) % 60;

@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
 import TimeLineCanvas from "./canvas/TimeLineCanvas";
+import { useEffect, useState } from "react";
 import ScheduledEvents from "./scheduledEvents/ScheduledEvents";
-import { useDateStore } from "src/stores/dateStore";
 import CurrentTimeArrow from "./currentTimeArrow/CurrentTimeArrow";
+import { useDateStore } from "src/stores/dateStore";
+import AddEventModal from "./addEventModal/AddEventModal";
 
 export const PIXELS_PER_MINUTES = 2.5;
 export const MINUTES_IN_HOUR = 60;
@@ -31,8 +32,10 @@ const returnCanvasHight = () => {
 
 const EventsContainer = () => {
   const [canvasHeight, setCanvasHeight] = useState(0);
-  const currentDay = useDateStore((state) => state.selectedDate);
 
+  const [showModal, setShowModal] = useState(false);
+
+  const currentDay = useDateStore((state) => state.selectedDate);
   useEffect(() => {
     let canvasHeight = returnCanvasHight();
     if (!canvasHeight) return;
@@ -62,6 +65,13 @@ const EventsContainer = () => {
         <TimeLineCanvas startTime="09:00" totalHeight={TOTAL_HEIGHT} />
         <ScheduledEvents />
         {currentDay?.isCurrent && <CurrentTimeArrow />}
+        <button
+          className="sticky bottom-5 left-64 w-12 h-12 rounded-full shadow-md shadow-[#3c46e0]/50 bg-[#3c46e0] flex justify-center items-center text-xl"
+          onClick={() => setShowModal(true)}
+        >
+          +
+        </button>
+        {showModal && <AddEventModal setShowModal={setShowModal} />}
       </div>
     </div>
   );

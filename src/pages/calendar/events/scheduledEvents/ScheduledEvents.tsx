@@ -2,13 +2,12 @@ import { useEffect } from "react";
 import { useEventStore } from "src/stores/eventStore";
 import { useDateStore } from "src/stores/dateStore";
 import { useUserStore } from "src/stores/userStore";
-import { EventType, guestType } from "src/interface";
+import { EventType, GuestType } from "src/interface";
 import {
   PADDING_FROM_TOP,
   returnHeightBasedOnTimeDifference,
-  returnPixelBasedOnTime,
+  returnSplitedTime,
 } from "src/utils";
-import { guests } from "src/mockData";
 import defaultAvatar from "src/assets/images/defaultAvatar.png";
 import { motion } from "framer-motion";
 const scheduledEvents = ({}) => {
@@ -16,7 +15,7 @@ const scheduledEvents = ({}) => {
   const currentDay = useDateStore((state) => state.selectedDate);
   const filterEvents = useEventStore((state) => state.filterEvents);
   const selectedEvents = useEventStore((state) => state.selectedEvents);
-
+  const guests = useEventStore((state) => state.guests);
   useEffect(() => {
     if (currUser && currentDay) {
       filterEvents(currentDay.date, currUser.id);
@@ -45,9 +44,7 @@ const scheduledEvents = ({}) => {
                 : "opacity-70  bg-hatch-pattern bg-hatch"
             }`}
             style={{
-              top:
-                returnPixelBasedOnTime(event.startTime).pixels +
-                PADDING_FROM_TOP,
+              top: returnSplitedTime(event.startTime).pixels + PADDING_FROM_TOP,
               height: returnHeightBasedOnTimeDifference(
                 event.startTime,
                 event.endTime
@@ -58,7 +55,7 @@ const scheduledEvents = ({}) => {
               <div className="w-full flex justify-between self-start text-xs font-bold text-[#bec1c9]">
                 {
                   guests.find(
-                    (guest: guestType) =>
+                    (guest: GuestType) =>
                       guest.guestId === event.eventDetail.guestId
                   )?.name
                 }
@@ -67,11 +64,11 @@ const scheduledEvents = ({}) => {
                     alt="profile picture"
                     src={
                       guests.find(
-                        (guest: guestType) =>
+                        (guest: GuestType) =>
                           guest.guestId === event.eventDetail.guestId
                       )?.avatar
                         ? guests.find(
-                            (guest: guestType) =>
+                            (guest: GuestType) =>
                               guest.guestId === event.eventDetail.guestId
                           )?.avatar
                         : defaultAvatar

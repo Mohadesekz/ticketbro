@@ -12,7 +12,7 @@ type Store = {
 
 export const useUserStore = create<Store>()((set) => ({
   users: users,
-  selectedUser: users[0],
+  selectedUser: users.find((user: UserType) => user.selected) || users[0],
   changeUser: (id) => {
     set((state) => ({
       users: state.users.map((user) => {

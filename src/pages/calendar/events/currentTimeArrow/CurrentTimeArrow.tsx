@@ -1,7 +1,7 @@
 import {
   PADDING_FROM_TOP,
   getCurrentTimeInSaoPaulo,
-  returnPixelBasedOnTime,
+  returnSplitedTime,
 } from "src/utils";
 
 const CurrentTimeArrow = ({}) => {
@@ -12,7 +12,7 @@ const CurrentTimeArrow = ({}) => {
       className="absolute w-full "
       style={{
         top:
-          returnPixelBasedOnTime(getCurrentTimeInSaoPaulo()).pixels +
+          returnSplitedTime(getCurrentTimeInSaoPaulo()).pixels +
           PADDING_FROM_TOP,
       }}
     >

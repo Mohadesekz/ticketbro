@@ -18,7 +18,7 @@ export type UserType = {
   selected: boolean;
   counter: number;
 };
-export type guestType = {
+export type GuestType = {
   name: string;
   guestId: number;
   avatar?: string;

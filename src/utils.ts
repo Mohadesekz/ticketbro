@@ -1,4 +1,4 @@
-import { WeekDateType } from "./interface";
+import { EventType, WeekDateType } from "./interface";
 export const PIXELS_PER_MINUTES = 2.5;
 export const QUARTER = 15;
 export const HOURS_IN_A_DAY = 24;
@@ -14,12 +14,21 @@ export function getCurrentWeekDates() {
   const options = { timeZone: "America/Sao_Paulo" };
   const saoPauloToday = today.toLocaleString("en-US", options);
   const currentDay = (new Date(saoPauloToday).getDay() + 6) % 7;
+
   const weekStart = new Date(saoPauloToday);
   weekStart.setDate(weekStart.getDate() - currentDay); // Get the starting day (Monday) of the current week
+  let weekStartDate;
+  let weekEndDate;
 
   for (let i = 0; i < 7; i++) {
     const date = new Date(weekStart);
     date.setDate(date.getDate() + i);
+    if (i === 0) {
+      weekStartDate = new Date(date.toLocaleString("en-US"));
+    }
+    if (i === 6) {
+      weekEndDate = new Date(date.toLocaleString("en-US"));
+    }
     weekDates.push({
       day: days[i],
       date: new Date(date.toLocaleString("en-US")).getDate(),
@@ -27,7 +36,12 @@ export function getCurrentWeekDates() {
       selected: i === currentDay,
     });
   }
-  return weekDates;
+  return {
+    weekDates,
+    weekStartDate,
+    weekEndDate,
+    currentDay: new Date(saoPauloToday),
+  };
 }
 export function getToday() {
   return weekDates.find((weekDate: WeekDateType) => weekDate.selected);
@@ -76,7 +90,7 @@ export function getCurrentTimeInSaoPaulo() {
   return currentHour + ":" + currentMinute;
 }
 
-export function returnPixelBasedOnTime(time: string) {
+export function returnSplitedTime(time: string) {
   const timeParts = time.split(":");
   const hour = parseInt(timeParts[0], 10);
   const shiftedHour = (hour + 15) % 24;
@@ -93,8 +107,8 @@ export function returnHeightBasedOnTimeDifference(
   endTime: string
 ) {
   const { hour: startHour, minutes: startMinute } =
-    returnPixelBasedOnTime(startTime);
-  const { hour: endHour, minutes: endMinute } = returnPixelBasedOnTime(endTime);
+    returnSplitedTime(startTime);
+  const { hour: endHour, minutes: endMinute } = returnSplitedTime(endTime);
 
   let startMinutes = startHour * MINUTES_IN_AN_HOUR + startMinute;
   let endMinutes = endHour * MINUTES_IN_AN_HOUR + endMinute;
@@ -105,4 +119,21 @@ export function returnHeightBasedOnTimeDifference(
   const timeDifference = endMinutes - startMinutes;
   const heightBasedOnTimeDifference = timeDifference * PIXELS_PER_MINUTES;
   return heightBasedOnTimeDifference;
+}
+
+export function checkTimeConflict(event: EventType, time: string) {
+  const { hour, minutes: minute } = returnSplitedTime(time);
+  const { hour: eventStartHour, minutes: eventStartMinute } = returnSplitedTime(
+    event.startTime
+  );
+  const { hour: eventEndHour, minutes: eventEndMinute } = returnSplitedTime(
+    event.endTime
+  );
+
+  if (hour >= eventStartHour && hour <= eventEndHour) {
+    if (minute >= eventStartMinute && minute <= eventEndMinute) {
+      return true;
+    }
+  }
+  return false;
 }

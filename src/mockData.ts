@@ -1,7 +1,7 @@
-import { EventType, UserType, guestType } from "./interface";
+import { EventType, UserType, GuestType } from "./interface";
 import { getCurrentWeekDates } from "./utils";
 
-const currentWeek = getCurrentWeekDates();
+const { weekDates: currentWeek } = getCurrentWeekDates();
 
 export const users: UserType[] = [
   {
@@ -41,7 +41,7 @@ export const users: UserType[] = [
   },
 ];
 
-export const guests: guestType[] = [
+export const guests: GuestType[] = [
   {
     name: "John Doe",
     guestId: 1,
@@ -63,7 +63,7 @@ export const guests: guestType[] = [
     avatar: "https://i.pravatar.cc/50?img=4",
   },
   {
-    name: "Adele",
+    name: "Lionel Renner",
     guestId: 5,
     avatar: "https://i.pravatar.cc/50?img=5",
   },
