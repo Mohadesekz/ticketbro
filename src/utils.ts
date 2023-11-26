@@ -121,19 +121,23 @@ export function returnHeightBasedOnTimeDifference(
   return heightBasedOnTimeDifference;
 }
 
-export function checkTimeConflict(event: EventType, time: string) {
+export function checkTimeConflict(
+  startTime: string,
+  endTime: string,
+  time: string
+) {
   const { hour, minutes: minute } = returnSplitedTime(time);
-  const { hour: eventStartHour, minutes: eventStartMinute } = returnSplitedTime(
-    event.startTime
-  );
-  const { hour: eventEndHour, minutes: eventEndMinute } = returnSplitedTime(
-    event.endTime
-  );
+  const { hour: eventStartHour, minutes: eventStartMinute } =
+    returnSplitedTime(startTime);
+  const { hour: eventEndHour, minutes: eventEndMinute } =
+    returnSplitedTime(endTime);
 
-  if (hour >= eventStartHour && hour <= eventEndHour) {
-    if (minute >= eventStartMinute && minute <= eventEndMinute) {
-      return true;
-    }
+  let checkNumber = hour * 60 + minute;
+  let startTimeNumber = eventStartHour * 60 + eventStartMinute;
+  let endMinuteNumber = eventEndHour * 60 + eventEndMinute;
+
+  if (checkNumber > startTimeNumber && checkNumber < endMinuteNumber) {
+    return true;
   }
   return false;
 }

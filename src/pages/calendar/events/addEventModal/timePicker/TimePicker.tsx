@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { IoIosArrowUp } from "react-icons/io";
 import { IoIosArrowDown } from "react-icons/io";
 import { HOURS_IN_A_DAY, MINUTES_IN_AN_HOUR } from "src/utils";
@@ -24,7 +24,7 @@ type IProps = {
 
 const TimePicker = ({ recievedTime, defaultHour }: IProps) => {
   const [hour, setHour] = useState<number>(defaultHour);
-  const [minute, setMinute] = useState<number>(0);
+  const [minute, setMinute] = useState<number>(15);
 
   const handleHourChange = (action: string) => {
     if (hour === 0 && action === "dec") {
@@ -64,7 +64,7 @@ const TimePicker = ({ recievedTime, defaultHour }: IProps) => {
     type === "hour" ? handleHourChange(action) : handleMinuteChange(action);
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (minute === 60) {
       setMinute(0);
       handleHourChange("inc");

@@ -5,7 +5,6 @@ import "react-datepicker/dist/react-datepicker.css";
 import {
   checkTimeConflict,
   getCurrentWeekDates,
-  returnHeightBasedOnTimeDifference,
   returnSplitedTime,
 } from "src/utils";
 import { useEffect, useState } from "react";
@@ -13,6 +12,7 @@ import { useUserStore } from "src/stores/userStore";
 import { useEventStore } from "src/stores/eventStore";
 import TimePicker from "./timePicker/TimePicker";
 import { EventType, eventDetailType, GuestType } from "src/interface";
+import { useDateStore } from "src/stores/dateStore";
 
 type IProps = {
   setShowModal: (value: boolean) => void;
@@ -32,10 +32,10 @@ type ErrorType = {
 };
 
 const AddEventModal = ({ setShowModal }: IProps) => {
-  // let appHeight = document.getElementById("app")?.clientHeight;
   const { weekStartDate, weekEndDate, currentDay } = getCurrentWeekDates();
   const currUser = useUserStore((state) => state.selectedUser);
-  const [currDay, setCurrDay] = useState<number>(currentDay.getDate());
+  const selectedDate = useDateStore((state) => state.selectedDate);
+  const changeDate = useDateStore((state) => state.changeDate);
 
   const [timeError, setTimeError] = useState<ErrorType>({
     conflictError: false,
@@ -59,32 +59,27 @@ const AddEventModal = ({ setShowModal }: IProps) => {
     watch,
     setValue,
     getValues,
+    clearErrors,
   } = useForm<IFormInput>({
     defaultValues: {
       guest: "",
       eventType: "Unavailable",
       selectedDate: currentDay,
-      startTime: "09:00",
-      endTime: "10:00",
+      startTime: "09:15",
+      endTime: "10:15",
     },
   });
 
   useEffect(() => {
-    setCurrDay(
-      getValues("selectedDate")
-        ? getValues("selectedDate").getDate()
-        : currentDay.getDate()
-    );
-  }, [getValues("selectedDate"), currentDay]);
-
-  useEffect(() => {
-    filterEvents(currDay, currUser.id);
-    checkConflictsForEvents(watch("startTime"));
-    checkConflictsForEvents(watch("endTime"));
-  }, [currDay]);
+    if (!selectedDate) return;
+    filterEvents(selectedDate.date, currUser.id);
+    filterEventsOfASelectedDay();
+    updateUserBadge();
+    recievedStartTime(getValues("startTime"));
+    recievedEndTime(getValues("endTime"));
+  }, [selectedEvents.length]);
 
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
-    // console.log(data);
     let newGuest: GuestType;
     const eventDetail: eventDetailType = {
       type: data.eventType,
@@ -96,18 +91,19 @@ const AddEventModal = ({ setShowModal }: IProps) => {
         name: data.guest,
         guestId: randomId,
       };
-      // console.log(newGuest);
       addGuest(newGuest);
     }
+    if (!selectedDate) return;
     const newEvent: EventType = {
       startTime: data.startTime,
       endTime: data.endTime,
       userId: currUser.id,
-      date: data.selectedDate.getDate(),
+      date: selectedDate.date,
       eventDetail,
     };
+
     addEvent(newEvent);
-    filterEvents(data.selectedDate.getDate(), currUser.id);
+    filterEvents(selectedDate.date, currUser.id);
     filterEventsOfASelectedDay();
     updateUserBadge();
     setShowModal(false);
@@ -135,36 +131,56 @@ const AddEventModal = ({ setShowModal }: IProps) => {
     }
   };
 
-  const checkConflictsForEvents = (startTime: string) => {
+  const checkConflictsForEvents = () => {
     for (let i = 0; i < selectedEvents.length; i++) {
-      const conflict: boolean = checkTimeConflict(selectedEvents[i], startTime);
-      if (conflict) {
-        setTimeError((prevProps: ErrorType) => ({
-          ...prevProps,
-          conflictError: true,
-        }));
-        return;
+      const conflictStartTime: boolean = checkTimeConflict(
+        getValues("startTime"),
+        getValues("endTime"),
+        selectedEvents[i].startTime
+      );
+      const conflictEndTime: boolean = checkTimeConflict(
+        getValues("startTime"),
+        getValues("endTime"),
+        selectedEvents[i].endTime
+      );
+
+      if (conflictStartTime || conflictEndTime) {
+        return true;
       }
     }
-    setTimeError((prevProps: ErrorType) => ({
-      ...prevProps,
-      conflictError: false,
-    }));
+    return false;
   };
+
+  const checkConflicts = () => {
+    if (checkConflictsForEvents()) {
+      setTimeError((prevProps: ErrorType) => ({
+        ...prevProps,
+        conflictError: true,
+      }));
+    } else {
+      setTimeError((prevProps: ErrorType) => ({
+        ...prevProps,
+        conflictError: false,
+      }));
+    }
+  };
+
   const recievedStartTime = (startTime: string) => {
     if (startTime) {
       setValue("startTime", startTime);
       validateTime(startTime, watch("endTime"));
-      checkConflictsForEvents(startTime);
+      checkConflicts();
     }
   };
+
   const recievedEndTime = (endTime: string) => {
     if (endTime) {
       setValue("endTime", endTime);
       validateTime(watch("startTime"), endTime);
-      checkConflictsForEvents(endTime);
+      checkConflicts();
     }
   };
+
   const selectedType = watch("eventType");
   return (
     <div>
@@ -226,19 +242,25 @@ const AddEventModal = ({ setShowModal }: IProps) => {
                   <label className="block uppercase tracking-wide text-gray-400 text-[10px] font-bold mb-1">
                     Date
                   </label>
-                  <DatePicker
-                    {...register("selectedDate", { required: true })}
-                    selected={
-                      watch("selectedDate") ? watch("selectedDate") : currentDay
-                    }
-                    minDate={weekStartDate}
-                    maxDate={weekEndDate}
-                    dateFormat="dd/MM/yyyy"
-                    onChange={(e: Date) => {
-                      setValue("selectedDate", e);
-                    }}
-                    className="block w-full bg-navy text-xs text-gray-200 py-1 px-3 pr-20 rounded leading-tight focus:outline-none"
-                  />
+                  {selectedDate && (
+                    <DatePicker
+                      {...register("selectedDate", { required: true })}
+                      selected={new Date(new Date().setDate(selectedDate.date))}
+                      minDate={weekStartDate}
+                      maxDate={weekEndDate}
+                      dateFormat="dd/MM/yyyy"
+                      onChange={(value: Date) => {
+                        setValue("selectedDate", value);
+                        changeDate(value.getDate());
+                        filterEvents(value.getDate(), currUser.id);
+                        filterEventsOfASelectedDay();
+                        updateUserBadge();
+                        recievedStartTime(getValues("startTime"));
+                        recievedEndTime(getValues("endTime"));
+                      }}
+                      className="block w-full bg-navy text-xs text-gray-200 py-1 px-3 pr-20 rounded leading-tight focus:outline-none"
+                    />
+                  )}
                   {errors.selectedDate && (
                     <p className="text-red-500 text-[10px] mt-1 italic">
                       Date is required
@@ -272,15 +294,16 @@ const AddEventModal = ({ setShowModal }: IProps) => {
                   )}
                 </div>
 
-                {timeError.differenceError && (
+                {timeError.differenceError ? (
                   <p className="text-red-500 text-[10px] mt-1 italic">
-                    End time should be after start time
+                    End time should be after start time!
                   </p>
-                )}
-                {timeError.conflictError && (
+                ) : timeError.conflictError ? (
                   <p className="text-red-500 text-[10px] mt-1 italic">
-                    There is another event in this time
+                    There is another event in this time and date!
                   </p>
+                ) : (
+                  ""
                 )}
               </div>
 
@@ -288,7 +311,14 @@ const AddEventModal = ({ setShowModal }: IProps) => {
                 <button
                   className="text-red-500 background-transparent font-bold uppercase px-2 py-2 text-[10px] outline-none focus:outline-none mr-1 ease-linear transition-all duration-150"
                   type="button"
-                  onClick={() => setShowModal(false)}
+                  onClick={() => {
+                    setShowModal(false);
+                    clearErrors();
+                    setTimeError({
+                      conflictError: false,
+                      differenceError: false,
+                    });
+                  }}
                 >
                   Close
                 </button>
