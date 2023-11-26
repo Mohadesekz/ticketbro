@@ -136,7 +136,7 @@ export function checkTimeConflict(
   let startTimeNumber = eventStartHour * 60 + eventStartMinute;
   let endMinuteNumber = eventEndHour * 60 + eventEndMinute;
 
-  if (checkNumber > startTimeNumber && checkNumber < endMinuteNumber) {
+  if (checkNumber >= startTimeNumber && checkNumber <= endMinuteNumber) {
     return true;
   }
   return false;
