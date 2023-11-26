@@ -1,4 +1,4 @@
-import { EventType, WeekDateType } from "./interface";
+import { WeekDateType } from "./interface";
 export const PIXELS_PER_MINUTES = 2.5;
 export const QUARTER = 15;
 export const HOURS_IN_A_DAY = 24;
