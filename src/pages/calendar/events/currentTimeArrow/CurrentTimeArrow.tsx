@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
   PADDING_FROM_TOP,
   getCurrentTimeInSaoPaulo,
@@ -5,7 +6,17 @@ import {
 } from "src/utils";
 
 const CurrentTimeArrow = ({}) => {
-  getCurrentTimeInSaoPaulo();
+  const [currentTime, setCurrentTime] = useState(getCurrentTimeInSaoPaulo());
+
+  useEffect(() => {
+    const tick = setInterval(() => {
+      setCurrentTime(getCurrentTimeInSaoPaulo());
+    }, 1000);
+
+    return () => {
+      clearInterval(tick);
+    };
+  });
 
   return (
     <div
@@ -19,7 +30,7 @@ const CurrentTimeArrow = ({}) => {
       <div className="w-full h-[1px] bg-white"></div>
       <div className="relative flex">
         <div className="w-max bg-white text-black text-[10px] px-[10px] py-[3px] font-bold rounded-md relative left-4 bottom-3">
-          {getCurrentTimeInSaoPaulo()}
+          {currentTime}
         </div>
         <div className="wtf relative w-2 h-2 after:absolute after:contents-[''] after:left-[15px] after:top-[-6px] after:border-[6px] after:border-transparent after:border-l-white"></div>
       </div>
